@@ -1,0 +1,1280 @@
+import React, { useMemo, useState } from 'react';
+import {
+  FileText,
+  Download,
+  Filter,
+  Search,
+  Plus,
+  Calendar,
+  CheckCircle2,
+  Clock3,
+  ShieldCheck,
+  FileSpreadsheet,
+  FileCheck2,
+  Printer,
+  BarChart3,
+  Scale,
+  RefreshCw,
+  X,
+  Eye,
+  Trash2,
+  ChevronRight,
+  Database,
+  Hash,
+  User,
+  Briefcase,
+  SlidersHorizontal,
+  LockKeyhole,
+} from 'lucide-react';
+
+export default function Reports() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState('ALL');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [selectedCase, setSelectedCase] = useState('26189-042');
+  const [selectedTemplate, setSelectedTemplate] =
+    useState('LEGAL_AFFIDAVIT');
+
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [modalReport, setModalReport] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const [reportsList, setReportsList] = useState([
+    {
+      id: 'RPT-2026-9011',
+      title:
+        'Section 65B Electronic Evidence Affidavit & Hash Certificate',
+      type: 'LEGAL_AFFIDAVIT',
+      caseId: '26189-042',
+      firNo: 'FIR-2026-NCRB-9021',
+      generatedBy: 'Inspector R. Deshmukh',
+      generatedAt: '12 Jan 2026, 16:40 IST',
+      status: 'READY',
+      size: '2.4 MB',
+      format: 'PDF',
+      hashSignature: 'SHA256: 9f8a0...c418e',
+    },
+    {
+      id: 'RPT-2026-8842',
+      title:
+        'Comprehensive Telecom CDR & Tower Dump Frequency Analysis',
+      type: 'CDR_ANALYSIS',
+      caseId: '26189-042',
+      firNo: 'FIR-2026-NCRB-9021',
+      generatedBy: 'DySP S. Pattnaik',
+      generatedAt: '18 Jan 2026, 11:15 IST',
+      status: 'READY',
+      size: '14.8 MB',
+      format: 'PDF',
+      hashSignature: 'SHA256: a14c8...e901b',
+    },
+    {
+      id: 'RPT-2026-8710',
+      title:
+        'Multi-Layer Shell Account Money Laundering Trail (FIU Dump)',
+      type: 'FINANCIAL_TRAIL',
+      caseId: '26189-088',
+      firNo: 'FIR-2026-DL-4410',
+      generatedBy: 'Senior Investigator V. Kumar',
+      generatedAt: '05 Feb 2026, 09:30 IST',
+      status: 'READY',
+      size: '8.2 MB',
+      format: 'EXCEL',
+      hashSignature: 'SHA256: e8812...a0421',
+    },
+    {
+      id: 'RPT-2026-8501',
+      title:
+        'Master Syndicate Linkage & Inter-Suspect Network Dossier',
+      type: 'DOSSIER',
+      caseId: '26189-102',
+      firNo: 'FIR-2026-MH-1102',
+      generatedBy: 'Forensic Expert A. Mehta',
+      generatedAt: '22 Feb 2026, 14:05 IST',
+      status: 'PROCESSING',
+      size: 'Calculating...',
+      format: 'PDF',
+      hashSignature: 'PENDING',
+    },
+  ]);
+
+  const showToast = (message) => {
+    setToastMessage(message);
+
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3500);
+  };
+
+  const handleGenerateReport = (e) => {
+    e?.preventDefault();
+
+    if (isGenerating) return;
+
+    setIsGenerating(true);
+
+    setTimeout(() => {
+      let title =
+        'Section 65B Electronic Evidence Affidavit & Hash Certificate';
+
+      const type = selectedTemplate;
+
+      const format =
+        type === 'FINANCIAL_TRAIL' ? 'EXCEL' : 'PDF';
+
+      const fir =
+        selectedCase === '26189-042'
+          ? 'FIR-2026-NCRB-9021'
+          : selectedCase === '26189-088'
+          ? 'FIR-2026-DL-4410'
+          : 'FIR-2026-MH-1102';
+
+      if (type === 'CDR_ANALYSIS') {
+        title =
+          'Comprehensive Telecom CDR & Tower Dump Frequency Analysis';
+      }
+
+      if (type === 'FINANCIAL_TRAIL') {
+        title =
+          'Multi-Layer Shell Account Money Laundering Trail (FIU Dump)';
+      }
+
+      if (type === 'DOSSIER') {
+        title =
+          'Master Syndicate Linkage & Inter-Suspect Network Dossier';
+      }
+
+      const newReport = {
+        id: `RPT-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        title,
+        type,
+        caseId: selectedCase,
+        firNo: fir,
+        generatedBy: 'Tushar Kaushik',
+        generatedAt: 'Just Now',
+        status: 'READY',
+        size: `${(Math.random() * 5 + 1.5).toFixed(1)} MB`,
+        format,
+        hashSignature: `SHA256: ${Math.random()
+          .toString(36)
+          .substring(2, 8)}...${Math.random()
+          .toString(36)
+          .substring(2, 7)}`,
+      };
+
+      setReportsList((prev) => [newReport, ...prev]);
+      setIsGenerating(false);
+
+      showToast(
+        `Report ${newReport.id} generated successfully.`
+      );
+    }, 1500);
+  };
+
+  const handleDownload = (report) => {
+    showToast(
+      `Preparing export for ${report.id}.${report.format.toLowerCase()}`
+    );
+
+    const element = document.createElement('a');
+
+    const file = new Blob(
+      [
+        `CrimeGraph AI — Investigative Report\n\n`,
+        `Report ID: ${report.id}\n`,
+        `Title: ${report.title}\n`,
+        `Case: ${report.caseId}\n`,
+        `FIR: ${report.firNo}\n`,
+        `Generated By: ${report.generatedBy}\n`,
+        `Generated At: ${report.generatedAt}\n`,
+        `Format: ${report.format}\n`,
+        `Hash: ${report.hashSignature}\n`,
+      ],
+      {
+        type: 'text/plain;charset=utf-8',
+      }
+    );
+
+    const url = URL.createObjectURL(file);
+
+    element.href = url;
+    element.download = `${report.id}_${report.type}.txt`;
+
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+
+    URL.revokeObjectURL(url);
+  };
+
+  const handleBatchPrint = () => {
+    const readyReports = reportsList.filter(
+      (report) => report.status === 'READY'
+    );
+
+    showToast(
+      `Preparing ${readyReports.length} ready reports for printing.`
+    );
+
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handleDeleteReport = (id) => {
+    setReportsList((prev) =>
+      prev.filter((report) => report.id !== id)
+    );
+
+    if (modalReport?.id === id) {
+      setModalReport(null);
+    }
+
+    showToast(
+      `Report ${id} removed from the repository.`
+    );
+  };
+
+  const filteredReports = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return reportsList.filter((report) => {
+      const searchableText = [
+        report.title,
+        report.id,
+        report.firNo,
+        report.caseId,
+        report.generatedBy,
+        report.type,
+        report.status,
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      const matchesSearch =
+        !query || searchableText.includes(query);
+
+      const matchesType =
+        typeFilter === 'ALL' ||
+        report.type === typeFilter;
+
+      const matchesStatus =
+        statusFilter === 'ALL' ||
+        report.status === statusFilter;
+
+      return (
+        matchesSearch &&
+        matchesType &&
+        matchesStatus
+      );
+    });
+  }, [
+    reportsList,
+    searchQuery,
+    typeFilter,
+    statusFilter,
+  ]);
+
+  const readyCount = reportsList.filter(
+    (report) => report.status === 'READY'
+  ).length;
+
+  const processingCount = reportsList.filter(
+    (report) => report.status === 'PROCESSING'
+  ).length;
+
+  const totalSize = reportsList
+    .filter((report) => report.status === 'READY')
+    .reduce((total, report) => {
+      const value = parseFloat(report.size);
+
+      return total + (Number.isNaN(value) ? 0 : value);
+    }, 0);
+
+  const getReportTypeConfig = (type) => {
+    switch (type) {
+      case 'LEGAL_AFFIDAVIT':
+        return {
+          label: 'Legal / Sec 65B',
+          icon: Scale,
+          classes:
+            'bg-violet-50 text-violet-700 border-violet-200',
+        };
+
+      case 'CDR_ANALYSIS':
+        return {
+          label: 'Telecom CDR',
+          icon: BarChart3,
+          classes:
+            'bg-amber-50 text-amber-700 border-amber-200',
+        };
+
+      case 'FINANCIAL_TRAIL':
+        return {
+          label: 'Financial Trail',
+          icon: FileSpreadsheet,
+          classes:
+            'bg-cyan-50 text-cyan-700 border-cyan-200',
+        };
+
+      default:
+        return {
+          label: 'Master Dossier',
+          icon: FileCheck2,
+          classes:
+            'bg-emerald-50 text-emerald-700 border-emerald-200',
+        };
+    }
+  };
+
+  const getStatusConfig = (status) => {
+    if (status === 'READY') {
+      return {
+        label: 'Ready',
+        classes:
+          'bg-emerald-50 text-emerald-700 border-emerald-200',
+        icon: CheckCircle2,
+      };
+    }
+
+    return {
+      label: 'Processing',
+      classes:
+        'bg-amber-50 text-amber-700 border-amber-200',
+      icon: RefreshCw,
+    };
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f6f8fb] text-slate-900 font-sans">
+      {/* Toast */}
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-[100] max-w-md">
+          <div className="bg-white border border-emerald-200 shadow-xl rounded-xl px-4 py-3 flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+              <CheckCircle2
+                size={17}
+                className="text-emerald-600"
+              />
+            </div>
+
+            <div className="pt-0.5">
+              <p className="text-xs font-bold text-slate-900">
+                Report Repository
+              </p>
+
+              <p className="text-xs text-slate-600 mt-0.5">
+                {toastMessage}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setToastMessage(null)}
+              className="ml-2 text-slate-400 hover:text-slate-700 cursor-pointer"
+            >
+              <X size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <main className="max-w-[1600px] mx-auto p-4 md:p-6 space-y-6">
+        {/* Header */}
+        <section className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          <div>
+            <div className="flex items-center gap-2 text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+              <FileText size={15} />
+
+              <span>Investigation Workspace</span>
+
+              <ChevronRight size={13} />
+
+              <span className="text-slate-700">
+                Reports & Certifications
+              </span>
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mt-2">
+              Investigative Reports
+            </h1>
+
+            <p className="text-sm text-slate-500 mt-1 max-w-3xl">
+              Generate, review, and export structured investigation
+              reports, forensic analysis documents, and case dossiers.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleBatchPrint}
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-semibold hover:border-slate-300 hover:bg-slate-50 transition cursor-pointer"
+            >
+              <Printer size={15} />
+              Batch Print
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGenerateReport}
+              disabled={isGenerating}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition disabled:opacity-60 cursor-pointer"
+            >
+              {isGenerating ? (
+                <>
+                  <RefreshCw
+                    size={15}
+                    className="animate-spin"
+                  />
+                  Compiling...
+                </>
+              ) : (
+                <>
+                  <Plus size={16} />
+                  Generate Report
+                </>
+              )}
+            </button>
+          </div>
+        </section>
+
+        {/* Summary */}
+        <section className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+          <SummaryCard
+            icon={FileText}
+            label="Total Reports"
+            value={reportsList.length}
+            description="Repository entries"
+          />
+
+          <SummaryCard
+            icon={CheckCircle2}
+            label="Ready"
+            value={readyCount}
+            description="Available for export"
+            accent="emerald"
+          />
+
+          <SummaryCard
+            icon={Clock3}
+            label="Processing"
+            value={processingCount}
+            description="Compilation in progress"
+            accent="amber"
+          />
+
+          <SummaryCard
+            icon={Database}
+            label="Indexed Output"
+            value={`${totalSize.toFixed(1)} MB`}
+            description="Ready report volume"
+            accent="blue"
+          />
+        </section>
+
+        {/* Report Builder */}
+        <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center">
+                <FileCheck2
+                  size={18}
+                  className="text-blue-700"
+                />
+              </div>
+
+              <div>
+                <h2 className="text-sm font-bold text-slate-900">
+                  Report Builder
+                </h2>
+
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Select a case and output template to create a report.
+                </p>
+              </div>
+            </div>
+
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+              <ShieldCheck size={13} />
+              Evidence integrity workflow
+            </span>
+          </div>
+
+          <form
+            onSubmit={handleGenerateReport}
+            className="p-5"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <FormField label="Target Case / FIR">
+                <select
+                  value={selectedCase}
+                  onChange={(e) =>
+                    setSelectedCase(e.target.value)
+                  }
+                  className={selectClass}
+                >
+                  <option value="26189-042">
+                    FIR-2026-NCRB-9021 — Noida Cyber Heist
+                  </option>
+
+                  <option value="26189-088">
+                    FIR-2026-DL-4410 — Shell Banking Laundering
+                  </option>
+
+                  <option value="26189-102">
+                    FIR-2026-MH-1102 — Burner Phone Network
+                  </option>
+                </select>
+              </FormField>
+
+              <FormField label="Report Template">
+                <select
+                  value={selectedTemplate}
+                  onChange={(e) =>
+                    setSelectedTemplate(e.target.value)
+                  }
+                  className={selectClass}
+                >
+                  <option value="LEGAL_AFFIDAVIT">
+                    Section 65B / BSA Evidence Certificate
+                  </option>
+
+                  <option value="CDR_ANALYSIS">
+                    Tower Dump & Call Frequency Analysis
+                  </option>
+
+                  <option value="FINANCIAL_TRAIL">
+                    Financial Flow & Mule Audit Trail
+                  </option>
+
+                  <option value="DOSSIER">
+                    Suspect & Network Master Dossier
+                  </option>
+                </select>
+              </FormField>
+
+              <FormField label="Integrity Record">
+                <div className="h-[42px] px-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center gap-2 text-xs font-semibold text-slate-700">
+                  <Hash
+                    size={15}
+                    className="text-emerald-600"
+                  />
+
+                  SHA-256 hash field
+
+                  <LockKeyhole
+                    size={13}
+                    className="ml-auto text-slate-400"
+                  />
+                </div>
+              </FormField>
+
+              <div className="flex items-end">
+                <button
+                  type="submit"
+                  disabled={isGenerating}
+                  className="w-full h-[42px] rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold flex items-center justify-center gap-2 transition disabled:opacity-60 cursor-pointer"
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw
+                        size={15}
+                        className="animate-spin"
+                      />
+                      Building Output
+                    </>
+                  ) : (
+                    <>
+                      <FileCheck2 size={15} />
+                      Generate Report
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] text-slate-500">
+              <span className="inline-flex items-center gap-1.5">
+                <Briefcase size={13} />
+                Case-linked output
+              </span>
+
+              <span className="inline-flex items-center gap-1.5">
+                <ShieldCheck size={13} />
+                Evidence reference support
+              </span>
+
+              <span className="inline-flex items-center gap-1.5">
+                <Hash size={13} />
+                Cryptographic hash field
+              </span>
+            </div>
+          </form>
+        </section>
+
+        {/* Filters */}
+        <section className="bg-white border border-slate-200 rounded-2xl shadow-sm p-3">
+          <div className="flex flex-col lg:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search
+                size={16}
+                className="absolute left-3.5 top-3 text-slate-400"
+              />
+
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) =>
+                  setSearchQuery(e.target.value)
+                }
+                placeholder="Search report title, ID, FIR, case, or author..."
+                className="w-full h-10 pl-10 pr-10 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-700 cursor-pointer"
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="h-10 min-w-[205px] flex items-center gap-2 px-3 rounded-lg border border-slate-200 bg-slate-50">
+                <Filter
+                  size={14}
+                  className="text-slate-400"
+                />
+
+                <select
+                  value={typeFilter}
+                  onChange={(e) =>
+                    setTypeFilter(e.target.value)
+                  }
+                  className="bg-transparent w-full text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
+                >
+                  <option value="ALL">
+                    All report types
+                  </option>
+
+                  <option value="LEGAL_AFFIDAVIT">
+                    Legal / Sec 65B
+                  </option>
+
+                  <option value="CDR_ANALYSIS">
+                    Telecom CDR
+                  </option>
+
+                  <option value="FINANCIAL_TRAIL">
+                    Financial Trail
+                  </option>
+
+                  <option value="DOSSIER">
+                    Master Dossier
+                  </option>
+                </select>
+              </div>
+
+              <div className="h-10 min-w-[180px] flex items-center gap-2 px-3 rounded-lg border border-slate-200 bg-slate-50">
+                <Clock3
+                  size={14}
+                  className="text-slate-400"
+                />
+
+                <select
+                  value={statusFilter}
+                  onChange={(e) =>
+                    setStatusFilter(e.target.value)
+                  }
+                  className="bg-transparent w-full text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer"
+                >
+                  <option value="ALL">
+                    All statuses
+                  </option>
+
+                  <option value="READY">
+                    Ready for export
+                  </option>
+
+                  <option value="PROCESSING">
+                    Processing
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Repository */}
+        <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">
+                Report Repository
+              </h2>
+
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {filteredReports.length} report
+                {filteredReports.length !== 1 ? 's' : ''} matching
+                current filters
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-500">
+              <SlidersHorizontal size={13} />
+              <span>Case-linked records</span>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className={tableHeadClass}>
+                    Report Details
+                  </th>
+
+                  <th className={tableHeadClass}>
+                    Category
+                  </th>
+
+                  <th className={tableHeadClass}>
+                    Case Reference
+                  </th>
+
+                  <th className={tableHeadClass}>
+                    Generated By
+                  </th>
+
+                  <th className={tableHeadClass}>
+                    Status
+                  </th>
+
+                  <th
+                    className={`${tableHeadClass} text-right`}
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-100">
+                {filteredReports.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="py-16 text-center"
+                    >
+                      <div className="flex flex-col items-center">
+                        <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center">
+                          <Search
+                            size={19}
+                            className="text-slate-400"
+                          />
+                        </div>
+
+                        <p className="text-sm font-semibold text-slate-700 mt-3">
+                          No reports found
+                        </p>
+
+                        <p className="text-xs text-slate-400 mt-1">
+                          Adjust your search or filter criteria.
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredReports.map((report) => {
+                    const typeConfig =
+                      getReportTypeConfig(report.type);
+
+                    const statusConfig =
+                      getStatusConfig(report.status);
+
+                    const TypeIcon = typeConfig.icon;
+                    const StatusIcon = statusConfig.icon;
+
+                    return (
+                      <tr
+                        key={report.id}
+                        className="hover:bg-slate-50/80 transition"
+                      >
+                        {/* Report */}
+                        <td className="px-5 py-4 min-w-[340px]">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                              <FileText
+                                size={18}
+                                className="text-blue-700"
+                              />
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-mono text-[10px] font-bold text-slate-500">
+                                  {report.id}
+                                </span>
+
+                                <span className="text-[10px] text-slate-400">
+                                  •
+                                </span>
+
+                                <span className="text-[10px] font-semibold text-slate-400">
+                                  {report.format} · {report.size}
+                                </span>
+                              </div>
+
+                              <p className="text-xs font-bold text-slate-900 leading-5 max-w-[410px]">
+                                {report.title}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Category */}
+                        <td className="px-5 py-4">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold whitespace-nowrap ${typeConfig.classes}`}
+                          >
+                            <TypeIcon size={12} />
+                            {typeConfig.label}
+                          </span>
+                        </td>
+
+                        {/* Case */}
+                        <td className="px-5 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <Briefcase
+                              size={13}
+                              className="text-slate-400"
+                            />
+
+                            <div>
+                              <p className="font-mono text-[11px] font-bold text-blue-700">
+                                {report.firNo}
+                              </p>
+
+                              <p className="text-[10px] text-slate-500 mt-0.5">
+                                Case #{report.caseId}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Generated By */}
+                        <td className="px-5 py-4 min-w-[190px]">
+                          <div className="flex items-start gap-2">
+                            <User
+                              size={13}
+                              className="text-slate-400 mt-0.5"
+                            />
+
+                            <div>
+                              <p className="text-[11px] font-semibold text-slate-700">
+                                {report.generatedBy}
+                              </p>
+
+                              <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                                <Calendar size={10} />
+                                {report.generatedAt}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-5 py-4 min-w-[170px]">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-bold ${statusConfig.classes}`}
+                          >
+                            <StatusIcon
+                              size={11}
+                              className={
+                                report.status === 'PROCESSING'
+                                  ? 'animate-spin'
+                                  : ''
+                              }
+                            />
+
+                            {statusConfig.label}
+                          </span>
+
+                          <p className="font-mono text-[9px] text-slate-400 mt-1.5 max-w-[145px] truncate">
+                            {report.hashSignature}
+                          </p>
+                        </td>
+
+                        {/* Actions */}
+                        <td className="px-5 py-4">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {report.status === 'READY' ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setModalReport(report)
+                                  }
+                                  title="View report details"
+                                  className="w-8 h-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-900 hover:bg-slate-50 inline-flex items-center justify-center transition cursor-pointer"
+                                >
+                                  <Eye size={14} />
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleDownload(report)
+                                  }
+                                  className="h-8 px-2.5 rounded-lg bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100 inline-flex items-center gap-1.5 text-[10px] font-bold transition cursor-pointer"
+                                >
+                                  <Download size={13} />
+                                  Export
+                                </button>
+                              </>
+                            ) : (
+                              <span className="h-8 px-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 inline-flex items-center gap-1.5 text-[10px] font-semibold">
+                                <Clock3 size={12} />
+                                Waiting
+                              </span>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleDeleteReport(report.id)
+                              }
+                              title="Remove report"
+                              className="w-8 h-8 rounded-lg border border-red-100 bg-red-50 text-red-600 hover:bg-red-100 inline-flex items-center justify-center transition cursor-pointer"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Repository Note */}
+        <section className="flex flex-col md:flex-row md:items-center justify-between gap-3 px-1 pb-4">
+          <div className="flex items-center gap-2 text-[11px] text-slate-500">
+            <ShieldCheck
+              size={14}
+              className="text-emerald-600"
+            />
+
+            <span>
+              Report records remain linked to their originating case
+              and evidence references.
+            </span>
+          </div>
+
+          <span className="font-mono text-[10px] text-slate-400">
+            CRIMEGRAPH / REPORT-REPOSITORY
+          </span>
+        </section>
+      </main>
+
+      {/* Quick View Modal */}
+      {modalReport && (
+        <div
+          className="fixed inset-0 z-[90] bg-slate-900/30 backdrop-blur-sm flex items-center justify-center p-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              setModalReport(null);
+            }
+          }}
+        >
+          <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-5 py-4 border-b border-slate-200 flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                  <FileCheck2
+                    size={19}
+                    className="text-emerald-700"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700">
+                      Report Record
+                    </span>
+
+                    <span className="w-1 h-1 rounded-full bg-slate-300" />
+
+                    <span className="font-mono text-[10px] text-slate-400">
+                      {modalReport.id}
+                    </span>
+                  </div>
+
+                  <h3 className="text-base font-bold text-slate-900 mt-1 max-w-xl">
+                    {modalReport.title}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setModalReport(null)}
+                className="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center cursor-pointer"
+              >
+                <X size={17} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <DetailItem
+                  icon={Briefcase}
+                  label="Case Reference"
+                  value={`Case #${modalReport.caseId}`}
+                />
+
+                <DetailItem
+                  icon={FileText}
+                  label="FIR Number"
+                  value={modalReport.firNo}
+                  mono
+                />
+
+                <DetailItem
+                  icon={User}
+                  label="Generated By"
+                  value={modalReport.generatedBy}
+                />
+
+                <DetailItem
+                  icon={Calendar}
+                  label="Generated At"
+                  value={modalReport.generatedAt}
+                />
+
+                <DetailItem
+                  icon={FileSpreadsheet}
+                  label="Format & Size"
+                  value={`${modalReport.format} (${modalReport.size})`}
+                />
+
+                <DetailItem
+                  icon={CheckCircle2}
+                  label="Repository Status"
+                  value={modalReport.status}
+                />
+              </div>
+
+              {/* Hash */}
+              <div className="border border-slate-200 rounded-xl overflow-hidden">
+                <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Hash
+                      size={14}
+                      className="text-slate-500"
+                    />
+
+                    <span className="text-[11px] font-bold text-slate-700">
+                      Cryptographic Hash Record
+                    </span>
+                  </div>
+
+                  <span className="text-[9px] font-bold uppercase tracking-wide text-slate-400">
+                    SHA-256
+                  </span>
+                </div>
+
+                <div className="p-3">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 font-mono text-[11px] text-slate-700 break-all">
+                    {modalReport.hashSignature}
+                  </div>
+                </div>
+              </div>
+
+              {/* Integrity Notice */}
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-blue-50 border border-blue-100">
+                <ShieldCheck
+                  size={17}
+                  className="text-blue-700 mt-0.5 shrink-0"
+                />
+
+                <div>
+                  <p className="text-xs font-bold text-blue-900">
+                    Evidence integrity workflow
+                  </p>
+
+                  <p className="text-[11px] text-blue-800/80 mt-1 leading-5">
+                    The report record contains a cryptographic hash
+                    field that can be associated with the finalized
+                    evidence artifact and audit trail in the
+                    production backend.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-5 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setModalReport(null)}
+                className="px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-700 text-xs font-semibold hover:bg-slate-50 cursor-pointer"
+              >
+                Close
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  handleDownload(modalReport);
+                  setModalReport(null);
+                }}
+                className="px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold flex items-center gap-2 cursor-pointer"
+              >
+                <Download size={14} />
+                Export File
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Print Styles */}
+      <style>{`
+        @media print {
+          body {
+            background: white !important;
+          }
+
+          button,
+          select,
+          input {
+            display: none !important;
+          }
+
+          .shadow-sm,
+          .shadow-xl,
+          .shadow-2xl {
+            box-shadow: none !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------
+   Reusable Components
+------------------------------------------------------- */
+
+function SummaryCard({
+  icon: Icon,
+  label,
+  value,
+  description,
+  accent = 'slate',
+}) {
+  const accentClasses = {
+    slate: {
+      icon: 'bg-slate-100 text-slate-700',
+      value: 'text-slate-900',
+    },
+    emerald: {
+      icon: 'bg-emerald-50 text-emerald-700',
+      value: 'text-emerald-700',
+    },
+    amber: {
+      icon: 'bg-amber-50 text-amber-700',
+      value: 'text-amber-700',
+    },
+    blue: {
+      icon: 'bg-blue-50 text-blue-700',
+      value: 'text-blue-700',
+    },
+  };
+
+  const config =
+    accentClasses[accent] || accentClasses.slate;
+
+  return (
+    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <div
+          className={`w-9 h-9 rounded-lg flex items-center justify-center ${config.icon}`}
+        >
+          <Icon size={17} />
+        </div>
+
+        <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+          Registry
+        </span>
+      </div>
+
+      <div className="mt-4">
+        <p className="text-[11px] font-semibold text-slate-500">
+          {label}
+        </p>
+
+        <p
+          className={`text-xl font-bold tracking-tight mt-0.5 ${config.value}`}
+        >
+          {value}
+        </p>
+
+        <p className="text-[10px] text-slate-400 mt-1">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function FormField({ label, children }) {
+  return (
+    <div>
+      <label className="block text-[11px] font-bold text-slate-600 mb-1.5">
+        {label}
+      </label>
+
+      {children}
+    </div>
+  );
+}
+
+function DetailItem({
+  icon: Icon,
+  label,
+  value,
+  mono = false,
+}) {
+  return (
+    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+      <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+        <Icon size={12} />
+        {label}
+      </div>
+
+      <p
+        className={`mt-2 text-xs font-semibold text-slate-800 break-words ${
+          mono ? 'font-mono' : ''
+        }`}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+const selectClass =
+  'w-full h-[42px] px-3 rounded-lg border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700 focus:outline-none focus:bg-white focus:border-blue-500 cursor-pointer';
+
+const tableHeadClass =
+  'px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500 whitespace-nowrap';

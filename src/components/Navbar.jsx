@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   Bell,
@@ -14,6 +15,8 @@ import {
 export default function Navbar({ onSearchClick }) {
   const [showAlerts, setShowAlerts] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const navigate = useNavigate();
 
   // Prototype notification feed.
   // Replace with backend/API data when the alert service is connected.
@@ -49,6 +52,18 @@ export default function Navbar({ onSearchClick }) {
       default:
         return 'bg-blue-50 text-blue-700 border-blue-200';
     }
+  };
+
+  const closeMenus = () => {
+    setShowAlerts(false);
+    setShowProfileMenu(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userBadge');
+    closeMenus();
+    navigate('/login');
   };
 
   return (
@@ -319,8 +334,9 @@ export default function Navbar({ onSearchClick }) {
                   </div>
                 </div>
 
-                <a
-                  href="/alerts"
+                <Link
+                  to="/alerts"
+                  onClick={closeMenus}
                   className="
                     text-[10px]
                     font-semibold
@@ -331,7 +347,7 @@ export default function Navbar({ onSearchClick }) {
                   "
                 >
                   View All
-                </a>
+                </Link>
               </div>
 
               {/* Alert List */}
@@ -410,8 +426,9 @@ export default function Navbar({ onSearchClick }) {
             AI Copilot
         --------------------------------------------------- */}
 
-        <a
-          href="/intelligence"
+        <Link
+          to="/intelligence"
+          onClick={closeMenus}
           className="
             hidden
             sm:flex
@@ -433,7 +450,7 @@ export default function Navbar({ onSearchClick }) {
         >
           <Sparkles size={13} />
           <span>AI Copilot</span>
-        </a>
+        </Link>
 
         {/* ---------------------------------------------------
             User Profile
@@ -511,10 +528,7 @@ export default function Navbar({ onSearchClick }) {
 
             <ChevronDown
               size={13}
-              className="
-                text-slate-400
-                ml-0.5
-              "
+              className="text-slate-400 ml-0.5"
             />
           </button>
 
@@ -607,8 +621,9 @@ export default function Navbar({ onSearchClick }) {
               </div>
 
               {/* Security */}
-              <a
-                href="/settings"
+              <Link
+                to="/settings"
+                onClick={closeMenus}
                 className="
                   flex
                   items-center
@@ -628,11 +643,12 @@ export default function Navbar({ onSearchClick }) {
                 />
 
                 <span>Security Credentials</span>
-              </a>
+              </Link>
 
               {/* Audit */}
-              <a
-                href="/reports"
+              <Link
+                to="/reports"
+                onClick={closeMenus}
                 className="
                   flex
                   items-center
@@ -652,7 +668,7 @@ export default function Navbar({ onSearchClick }) {
                 />
 
                 <span>Audit Logs & Activity</span>
-              </a>
+              </Link>
 
               {/* Logout */}
               <div
@@ -663,9 +679,11 @@ export default function Navbar({ onSearchClick }) {
                   mt-1
                 "
               >
-                <a
-                  href="/login"
+                <button
+                  type="button"
+                  onClick={handleLogout}
                   className="
+                    w-full
                     flex
                     items-center
                     gap-2.5
@@ -676,11 +694,12 @@ export default function Navbar({ onSearchClick }) {
                     hover:bg-red-50
                     transition-colors
                     font-semibold
+                    text-left
                   "
                 >
                   <Lock size={14} />
                   <span>Lock / Logout Session</span>
-                </a>
+                </button>
               </div>
             </div>
           )}

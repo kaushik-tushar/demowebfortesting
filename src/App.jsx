@@ -19,6 +19,12 @@ import UserManagement from './pages/UserManagement';
 import Settings from './pages/Settings';
 import VehicleManagement from './pages/VehicleManagement';
 
+// NEW MODULES
+import DocumentProcessor from './pages/DocumentProcessor';
+import GeospatialIntelligence from './pages/Geospatial';
+import FinancialIntelligence from './pages/FinancialIntelligence';
+import Osint from './pages/Osint';
+
 // RBAC Protected Route Wrapper Component
 function ProtectedRoute({ children, allowedRoles }) {
   const userRole = localStorage.getItem('userRole') || 'viewer';
@@ -35,10 +41,20 @@ function ProtectedRoute({ children, allowedRoles }) {
         <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 text-red-400 rounded-2xl flex items-center justify-center mb-4 text-xl font-bold">
           🚫
         </div>
-        <h2 className="text-lg font-bold text-white mb-1">Access Restricted</h2>
+
+        <h2 className="text-lg font-bold text-white mb-1">
+          Access Restricted
+        </h2>
+
         <p className="text-xs text-slate-400 max-w-sm mb-4">
-          Your role (<span className="text-cyan-400 uppercase font-mono">{userRole}</span>) does not have clearance to access this module under NCRB security protocols.
+          Your role (
+          <span className="text-cyan-400 uppercase font-mono">
+            {userRole}
+          </span>
+          ) does not have clearance to access this module under NCRB security
+          protocols.
         </p>
+
         <button
           onClick={() => window.location.href = '/dashboard'}
           className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-xl transition"
@@ -56,100 +72,198 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      
+
       {/* Main Layout Wrapping Protected Modules */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
-        
-        {/* Dashboard: Accessible to All */}
-        <Route path="dashboard" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer', 'analyst', 'viewer']}>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
 
-{/* Network Intelligence */}
-<Route path="network" element={
-  <ProtectedRoute allowedRoles={['admin', 'analyst']}>
-    <LinkAnalysis />
-  </ProtectedRoute>
-} />
+        {/* Dashboard: Accessible to All */}
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst', 'viewer']}
+            >
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Network Intelligence */}
+        <Route
+          path="network"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'analyst']}>
+              <LinkAnalysis />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Entity Intelligence: Admin & Analyst */}
-        <Route path="entities" element={
-          <ProtectedRoute allowedRoles={['admin', 'analyst']}>
-            <EntityIntelligence />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="entities"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'analyst']}>
+              <EntityIntelligence />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Link Analysis: Admin & Analyst */}
-        <Route path="link-analysis" element={
-          <ProtectedRoute allowedRoles={['admin', 'analyst']}>
-            <LinkAnalysis />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="link-analysis"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'analyst']}>
+              <LinkAnalysis />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Cases: Admin & Investigation Officer */}
-        <Route path="cases" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer']}>
-            <CaseManagement />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="cases"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'officer']}>
+              <CaseManagement />
+            </ProtectedRoute>
+          }
+        />
 
         {/* AI Intelligence Hub: Admin & Analyst */}
-        <Route path="intelligence" element={
-          <ProtectedRoute allowedRoles={['admin', 'analyst']}>
-            <AIIntelligence />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="intelligence"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'analyst']}>
+              <AIIntelligence />
+            </ProtectedRoute>
+          }
+        />
 
         {/* CDR Analysis: Admin, Officer & Analyst */}
-        <Route path="cdr-analysis" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer', 'analyst']}>
-            <CdrAnalysis />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="cdr-analysis"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst']}
+            >
+              <CdrAnalysis />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Evidence Vault: Admin & Investigation Officer */}
-        <Route path="evidence" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer']}>
-            <DigitalEvidenceVault />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="evidence"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'officer']}>
+              <DigitalEvidenceVault />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Reports: Admin, Analyst & Viewer */}
-        <Route path="reports" element={
-          <ProtectedRoute allowedRoles={['admin', 'analyst', 'viewer']}>
-            <Reports />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="reports"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'analyst', 'viewer']}
+            >
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Timeline: Admin & Investigation Officer */}
-        <Route path="timeline" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer']}>
-            <Timeline />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="timeline"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'officer']}>
+              <Timeline />
+            </ProtectedRoute>
+          }
+        />
 
         {/* User Management: Admin Only */}
-        <Route path="usermanagement" element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <UserManagement />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="usermanagement"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UserManagement />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Settings: Admin & Officer */}
-        <Route path="settings" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer']}>
-            <Settings />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="settings"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'officer']}>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Vehicle Management: Admin & Officer */}
-        <Route path="vehicles" element={
-          <ProtectedRoute allowedRoles={['admin', 'officer']}>
-            <VehicleManagement />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="vehicles"
+          element={
+            <ProtectedRoute allowedRoles={['admin', 'officer']}>
+              <VehicleManagement />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ========================================================= */}
+        {/* NEW CRIMEGRAPH AI MODULES                                 */}
+        {/* ========================================================= */}
+
+        {/* Document Processor: Admin, Officer & Analyst */}
+        <Route
+          path="document-processor"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst']}
+            >
+              <DocumentProcessor />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Geospatial Intelligence: Admin, Officer & Analyst */}
+        <Route
+          path="geospatial"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst']}
+            >
+              <GeospatialIntelligence />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Financial Intelligence: Admin, Officer & Analyst */}
+        <Route
+          path="financial-intelligence"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst']}
+            >
+              <FinancialIntelligence />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* OSINT & Social Media: Admin, Officer & Analyst */}
+        <Route
+          path="osint"
+          element={
+            <ProtectedRoute
+              allowedRoles={['admin', 'officer', 'analyst']}
+            >
+              <Osint />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -12,9 +12,12 @@ import {
   FileSpreadsheet,
   Settings,
   Shield,
-  ChevronRight,
   LogOut,
-  Radio
+  Radio,
+  FileText,
+  LineChart,
+  Globe,
+  Map
 } from 'lucide-react';
 
 export default function Sidebar({
@@ -35,8 +38,7 @@ export default function Sidebar({
       path: '/cases',
       icon: Briefcase,
       badge: '142',
-      badgeColor:
-        'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
     },
     {
       name: 'Entity Intelligence',
@@ -48,16 +50,14 @@ export default function Sidebar({
       path: '/network',
       icon: GitFork,
       badge: 'Graph',
-      badgeColor:
-        'bg-violet-50 text-violet-700 border-violet-200'
+      badgeColor: 'bg-violet-50 text-violet-700 border-violet-200'
     },
     {
       name: 'Evidence & Vault',
       path: '/evidence',
       icon: FileCheck2,
       badge: 'Integrity',
-      badgeColor:
-        'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
     },
     {
       name: 'Timeline & Events',
@@ -69,17 +69,47 @@ export default function Sidebar({
       path: '/alerts',
       icon: AlertTriangle,
       badge: '07',
-      badgeColor:
-        'bg-red-50 text-red-700 border-red-200'
+      badgeColor: 'bg-red-50 text-red-700 border-red-200'
     },
     {
       name: 'Intelligence & AI',
       path: '/intelligence',
       icon: Bot,
       badge: 'AI',
-      badgeColor:
-        'bg-cyan-50 text-cyan-700 border-cyan-200'
+      badgeColor: 'bg-cyan-50 text-cyan-700 border-cyan-200'
     },
+
+    // --- SIH 26189 MODULES ---
+    {
+      name: 'Document Processor',
+      path: '/document-processor',
+      icon: FileText,
+      badge: 'NEW',
+      badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+    },
+    {
+      name: 'Financial Intel',
+      path: '/financial-intelligence',
+      icon: LineChart,
+      badge: 'NEW',
+      badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+    },
+    {
+      name: 'OSINT & Social',
+      path: '/osint',
+      icon: Globe,
+      badge: 'NEW',
+      badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+    },
+    {
+      name: 'Geospatial Intel',
+      path: '/geospatial',
+      icon: Map,
+      badge: 'NEW',
+      badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+    },
+    // -------------------------
+
     {
       name: 'Reports & Audit',
       path: '/reports',
@@ -119,12 +149,13 @@ export default function Sidebar({
         ${collapsed ? 'w-20' : 'w-64'}
       `}
     >
+
       {/* =====================================================
           BRAND
       ====================================================== */}
       <div
         className={`
-          h-[72px]
+          h-[68px]
           shrink-0
           border-b
           border-slate-200
@@ -134,13 +165,14 @@ export default function Sidebar({
         `}
       >
         <div className="flex items-center gap-3 min-w-0">
+
           {/* Brand Mark */}
           <div
             className="
-              h-10
-              w-10
+              h-9
+              w-9
               shrink-0
-              rounded-xl
+              rounded-lg
               bg-blue-600
               flex
               items-center
@@ -149,7 +181,7 @@ export default function Sidebar({
             "
           >
             <Shield
-              size={21}
+              size={19}
               strokeWidth={1.9}
               className="text-white"
             />
@@ -157,10 +189,11 @@ export default function Sidebar({
 
           {!collapsed && (
             <div className="min-w-0">
+
               <div className="flex items-center gap-1.5">
                 <span
                   className="
-                    text-[9px]
+                    text-[8px]
                     font-bold
                     uppercase
                     tracking-[0.12em]
@@ -182,7 +215,7 @@ export default function Sidebar({
 
               <h2
                 className="
-                  text-[15px]
+                  text-[14px]
                   font-bold
                   tracking-tight
                   text-slate-900
@@ -197,7 +230,7 @@ export default function Sidebar({
 
               <p
                 className="
-                  text-[9px]
+                  text-[8px]
                   text-slate-400
                   mt-0.5
                   truncate
@@ -205,6 +238,7 @@ export default function Sidebar({
               >
                 Women Safety Division
               </p>
+
             </div>
           )}
         </div>
@@ -214,9 +248,11 @@ export default function Sidebar({
           CONTENT
       ====================================================== */}
       <div className="flex flex-col flex-1 min-h-0">
+
         {/* Workspace Context */}
         {!collapsed && (
-          <div className="px-3 pt-3">
+          <div className="px-3 pt-2.5">
+
             <div
               className="
                 flex
@@ -224,23 +260,25 @@ export default function Sidebar({
                 justify-between
                 gap-2
                 px-3
-                py-2.5
-                rounded-xl
+                py-2
+                rounded-lg
                 bg-slate-50
                 border
                 border-slate-200
               "
             >
               <div className="flex items-center gap-2 min-w-0">
+
                 <Radio
-                  size={14}
+                  size={13}
                   className="text-emerald-600 shrink-0"
                 />
 
                 <div className="min-w-0">
+
                   <p
                     className="
-                      text-[10px]
+                      text-[9px]
                       font-semibold
                       text-slate-700
                       leading-none
@@ -251,7 +289,7 @@ export default function Sidebar({
 
                   <p
                     className="
-                      text-[9px]
+                      text-[8px]
                       text-slate-400
                       mt-1
                       truncate
@@ -259,6 +297,7 @@ export default function Sidebar({
                   >
                     Investigation workspace
                   </p>
+
                 </div>
               </div>
 
@@ -271,7 +310,7 @@ export default function Sidebar({
                   bg-white
                   border
                   border-slate-200
-                  text-[9px]
+                  text-[8px]
                   font-mono
                   font-semibold
                   text-slate-600
@@ -279,18 +318,19 @@ export default function Sidebar({
               >
                 26189
               </span>
+
             </div>
           </div>
         )}
 
         {/* Collapsed Context Indicator */}
         {collapsed && (
-          <div className="flex justify-center pt-3">
+          <div className="flex justify-center pt-2.5">
             <div
               title="Investigation workspace · Case 26189"
               className="
-                w-9
-                h-9
+                w-8
+                h-8
                 rounded-lg
                 bg-slate-50
                 border
@@ -301,7 +341,7 @@ export default function Sidebar({
               "
             >
               <Radio
-                size={15}
+                size={14}
                 className="text-emerald-600"
               />
             </div>
@@ -315,19 +355,21 @@ export default function Sidebar({
           className="
             flex-1
             overflow-y-auto
-            px-3
-            py-4
-            space-y-1
+            overflow-x-hidden
+            px-2.5
+            py-2.5
+            space-y-0.5
             custom-scrollbar
           "
           aria-label="Primary navigation"
         >
+
           {!collapsed && (
             <p
               className="
                 px-2
-                pb-2
-                text-[9px]
+                pb-1.5
+                text-[8px]
                 font-bold
                 uppercase
                 tracking-[0.14em]
@@ -357,10 +399,13 @@ export default function Sidebar({
                   rounded-lg
                   transition-all
                   duration-150
-                  ${collapsed
-                    ? 'px-3 py-3 justify-center'
-                    : 'px-3 py-2.5'
+
+                  ${
+                    collapsed
+                      ? 'px-2.5 py-2 justify-center'
+                      : 'px-2.5 py-1.5'
                   }
+
                   ${
                     isActive
                       ? 'bg-blue-50 text-blue-700'
@@ -368,14 +413,15 @@ export default function Sidebar({
                   }
                 `}
               >
+
                 {/* Active Indicator */}
                 {isActive && (
                   <span
                     className="
                       absolute
                       left-0
-                      top-2
-                      bottom-2
+                      top-1.5
+                      bottom-1.5
                       w-0.5
                       rounded-r-full
                       bg-blue-600
@@ -387,20 +433,23 @@ export default function Sidebar({
                   className="
                     flex
                     items-center
-                    gap-3
+                    gap-2.5
                     min-w-0
                   "
                 >
+
+                  {/* Icon */}
                   <div
                     className={`
-                      w-8
-                      h-8
-                      rounded-lg
+                      w-7
+                      h-7
+                      rounded-md
                       flex
                       items-center
                       justify-center
                       shrink-0
                       transition
+
                       ${
                         isActive
                           ? 'bg-white border border-blue-100'
@@ -409,7 +458,7 @@ export default function Sidebar({
                     `}
                   >
                     <Icon
-                      size={17}
+                      size={15}
                       strokeWidth={isActive ? 2 : 1.8}
                       className={
                         isActive
@@ -419,11 +468,14 @@ export default function Sidebar({
                     />
                   </div>
 
+                  {/* Label */}
                   {!collapsed && (
                     <span
                       className={`
                         truncate
-                        text-xs
+                        text-[11px]
+                        leading-none
+
                         ${
                           isActive
                             ? 'font-semibold'
@@ -434,6 +486,7 @@ export default function Sidebar({
                       {item.name}
                     </span>
                   )}
+
                 </div>
 
                 {/* Badge */}
@@ -441,21 +494,24 @@ export default function Sidebar({
                   <span
                     className={`
                       shrink-0
-                      text-[9px]
+                      text-[8px]
                       px-1.5
                       py-0.5
-                      rounded-md
+                      rounded
                       border
                       font-semibold
+                      leading-none
                       ${item.badgeColor}
                     `}
                   >
                     {item.badge}
                   </span>
                 )}
+
               </NavLink>
             );
           })}
+
         </nav>
 
         {/* =====================================================
@@ -464,12 +520,13 @@ export default function Sidebar({
         <div
           className="
             shrink-0
-            p-3
+            p-2.5
             border-t
             border-slate-200
             bg-slate-50/70
           "
         >
+
           {/* Settings */}
           <NavLink
             to="/settings"
@@ -478,15 +535,17 @@ export default function Sidebar({
               `
                 flex
                 items-center
-                gap-3
+                gap-2.5
                 rounded-lg
-                text-xs
+                text-[11px]
                 transition
+
                 ${
                   collapsed
-                    ? 'justify-center px-3 py-3'
-                    : 'px-3 py-2.5'
+                    ? 'justify-center px-2.5 py-2'
+                    : 'px-2.5 py-1.5'
                 }
+
                 ${
                   isActive
                     ? 'bg-white border border-slate-200 text-blue-700 shadow-sm'
@@ -495,8 +554,9 @@ export default function Sidebar({
               `
             }
           >
+
             <Settings
-              size={17}
+              size={15}
               className="text-slate-500 shrink-0"
             />
 
@@ -505,13 +565,14 @@ export default function Sidebar({
                 System Settings
               </span>
             )}
+
           </NavLink>
 
           {/* User Profile */}
           <div
             className="
-              mt-2
-              pt-3
+              mt-1.5
+              pt-2
               border-t
               border-slate-200
               flex
@@ -520,20 +581,22 @@ export default function Sidebar({
               gap-2
             "
           >
+
             <div
               className={`
                 flex
                 items-center
-                gap-2.5
+                gap-2
                 min-w-0
                 ${collapsed ? 'justify-center w-full' : ''}
               `}
             >
+
               {/* Avatar */}
               <div
                 className="
-                  h-8
-                  w-8
+                  h-7
+                  w-7
                   rounded-full
                   bg-blue-50
                   border
@@ -546,7 +609,7 @@ export default function Sidebar({
               >
                 <span
                   className="
-                    text-[10px]
+                    text-[9px]
                     font-bold
                     text-blue-700
                   "
@@ -557,9 +620,10 @@ export default function Sidebar({
 
               {!collapsed && (
                 <div className="min-w-0">
+
                   <p
                     className="
-                      text-[11px]
+                      text-[10px]
                       font-semibold
                       text-slate-800
                       truncate
@@ -570,7 +634,7 @@ export default function Sidebar({
 
                   <p
                     className="
-                      text-[9px]
+                      text-[8px]
                       text-slate-400
                       truncate
                       mt-0.5
@@ -578,8 +642,10 @@ export default function Sidebar({
                   >
                     Senior Investigator · Level 4
                   </p>
+
                 </div>
               )}
+
             </div>
 
             {!collapsed && (
@@ -598,11 +664,13 @@ export default function Sidebar({
                   shrink-0
                 "
               >
-                <LogOut size={15} />
+                <LogOut size={14} />
               </button>
             )}
+
           </div>
         </div>
+
       </div>
     </aside>
   );

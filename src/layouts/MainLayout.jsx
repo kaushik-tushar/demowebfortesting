@@ -17,7 +17,10 @@ import {
   Car,
   Clock,
   Settings,
-  FileCheck2
+  FileCheck2,
+  Map,
+  LineChart,
+  Globe
 } from 'lucide-react';
 
 import { useAppStore } from '../store/appStore';
@@ -26,9 +29,10 @@ import { useAppStore } from '../store/appStore';
  * Main application layout.
  *
  * Provides:
- * - Collapsible navigation sidebar
+ * - Compact collapsible navigation sidebar
  * - Persistent officer session information
  * - Nested route rendering through <Outlet />
+ * - CrimeGraph AI investigation modules
  *
  * Top investigation/status header intentionally removed.
  */
@@ -52,7 +56,7 @@ export default function MainLayout() {
     localStorage.removeItem('tactical_auth_token');
     localStorage.removeItem('tactical_auth_user');
 
-    // Also clear the RBAC session used by ProtectedRoute/Login.
+    // Clear RBAC session used by ProtectedRoute/Login.
     localStorage.removeItem('userRole');
     localStorage.removeItem('userBadge');
 
@@ -64,10 +68,19 @@ export default function MainLayout() {
   --------------------------------------------------------- */
 
   const navItems = [
+    // =========================================================
+    // 1. CORE INVESTIGATION
+    // =========================================================
+
     {
       label: 'Dashboard',
       path: '/dashboard',
       icon: LayoutDashboard
+    },
+    {
+      label: 'Case Management',
+      path: '/cases',
+      icon: FolderArchive
     },
     {
       label: 'Entity Intelligence',
@@ -79,20 +92,25 @@ export default function MainLayout() {
       path: '/network',
       icon: Network
     },
-    {
-      label: 'Case Management',
-      path: '/cases',
-      icon: FolderArchive
-    },
-    {
-      label: 'User Management',
-      path: '/usermanagement',
-      icon: Users
-    },
+
+    // =========================================================
+    // 2. AI & INTELLIGENCE
+    // =========================================================
+
     {
       label: 'Intelligence & AI',
       path: '/intelligence',
       icon: Bot
+    },
+
+    // =========================================================
+    // 3. DATA INGESTION & ANALYSIS
+    // =========================================================
+
+    {
+      label: 'Document Processor',
+      path: '/document-processor',
+      icon: FileText
     },
     {
       label: 'CDR Analysis',
@@ -100,24 +118,54 @@ export default function MainLayout() {
       icon: Database
     },
     {
-      label: 'Vehicle Management',
-      path: '/vehicles',
-      icon: Car
+      label: 'Financial Intelligence',
+      path: '/financial-intelligence',
+      icon: LineChart
     },
+    {
+      label: 'Geospatial Intelligence',
+      path: '/geospatial',
+      icon: Map
+    },
+    {
+      label: 'OSINT & Social Media',
+      path: '/osint',
+      icon: Globe
+    },
+
+    // =========================================================
+    // 4. EVIDENCE & SUPPORTING INTELLIGENCE
+    // =========================================================
+
     {
       label: 'Digital Evidence',
       path: '/evidence',
       icon: FileCheck2
     },
     {
-      label: 'Reports & Audit',
-      path: '/reports',
-      icon: FileText
+      label: 'Vehicle Management',
+      path: '/vehicles',
+      icon: Car
     },
     {
       label: 'Timeline',
       path: '/timeline',
       icon: Clock
+    },
+
+    // =========================================================
+    // 5. REPORTING & ADMINISTRATION
+    // =========================================================
+
+    {
+      label: 'Reports & Audit',
+      path: '/reports',
+      icon: FileText
+    },
+    {
+      label: 'User Management',
+      path: '/usermanagement',
+      icon: Users
     },
     {
       label: 'Settings',
@@ -150,7 +198,7 @@ export default function MainLayout() {
           ${
             sidebarCollapsed
               ? 'w-16'
-              : 'w-64'
+              : 'w-60'
           }
         `}
       >
@@ -162,7 +210,7 @@ export default function MainLayout() {
         <div
           className={`
             flex
-            h-16
+            h-[52px]
             shrink-0
             items-center
             border-b
@@ -170,40 +218,45 @@ export default function MainLayout() {
             ${
               sidebarCollapsed
                 ? 'justify-center px-2'
-                : 'justify-between px-4'
+                : 'justify-between px-3'
             }
           `}
         >
-          <div className="flex items-center gap-3 min-w-0">
+
+          <div className="flex items-center gap-2.5 min-w-0">
+
+            {/* Brand Mark */}
 
             <div
               className="
                 flex
-                h-9
-                w-9
+                h-8
+                w-8
                 shrink-0
                 items-center
                 justify-center
-                rounded-xl
+                rounded-lg
                 bg-blue-600
                 shadow-sm
               "
             >
               <Shield
                 className="text-white"
-                size={19}
+                size={17}
                 strokeWidth={1.9}
               />
             </div>
 
             {!sidebarCollapsed && (
               <div className="min-w-0">
+
                 <h1
                   className="
-                    text-sm
+                    text-[13px]
                     font-bold
                     tracking-tight
                     text-slate-900
+                    leading-none
                   "
                 >
                   CrimeGraph
@@ -214,18 +267,20 @@ export default function MainLayout() {
 
                 <p
                   className="
-                    mt-0.5
-                    text-[9px]
+                    mt-1
+                    text-[7px]
                     font-semibold
                     uppercase
-                    tracking-[0.12em]
+                    tracking-[0.1em]
                     text-slate-400
                   "
                 >
                   Investigation Workspace
                 </p>
+
               </div>
             )}
+
           </div>
 
           {/* Collapse Button */}
@@ -236,11 +291,11 @@ export default function MainLayout() {
             className="
               hidden
               lg:flex
-              h-7
-              w-7
+              h-6
+              w-6
               items-center
               justify-center
-              rounded-lg
+              rounded-md
               text-slate-400
               hover:bg-slate-100
               hover:text-slate-700
@@ -258,11 +313,12 @@ export default function MainLayout() {
             }
           >
             {sidebarCollapsed ? (
-              <ChevronRight size={15} />
+              <ChevronRight size={14} />
             ) : (
-              <ChevronLeft size={15} />
+              <ChevronLeft size={14} />
             )}
           </button>
+
         </div>
 
         {/* ---------------------------------------------------
@@ -272,19 +328,22 @@ export default function MainLayout() {
         <nav
           className="
             flex-1
+            min-h-0
             overflow-y-auto
-            px-2
-            py-4
+            overflow-x-hidden
+            px-1.5
+            py-1.5
             custom-scrollbar
           "
           aria-label="Main navigation"
         >
+
           {!sidebarCollapsed && (
             <p
               className="
-                px-3
-                pb-2
-                text-[9px]
+                px-2.5
+                pb-1
+                text-[8px]
                 font-bold
                 uppercase
                 tracking-[0.14em]
@@ -295,7 +354,7 @@ export default function MainLayout() {
             </p>
           )}
 
-          <div className="space-y-0.5">
+          <div className="space-y-0">
 
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -316,14 +375,14 @@ export default function MainLayout() {
                       relative
                       flex
                       items-center
-                      rounded-lg
+                      rounded-md
                       transition-all
                       duration-150
 
                       ${
                         sidebarCollapsed
-                          ? 'justify-center px-2.5 py-3'
-                          : 'gap-3 px-3 py-2.5'
+                          ? 'justify-center px-2 py-1.5'
+                          : 'gap-2.5 px-2.5 py-1'
                       }
 
                       ${
@@ -336,6 +395,7 @@ export default function MainLayout() {
                 >
                   {({ isActive }) => (
                     <>
+
                       {/* Active indicator */}
 
                       {isActive && (
@@ -343,8 +403,8 @@ export default function MainLayout() {
                           className="
                             absolute
                             left-0
-                            top-2
-                            bottom-2
+                            top-1
+                            bottom-1
                             w-0.5
                             rounded-r-full
                             bg-blue-600
@@ -352,15 +412,18 @@ export default function MainLayout() {
                         />
                       )}
 
+                      {/* Icon */}
+
                       <div
                         className={`
                           flex
-                          h-8
-                          w-8
+                          h-[26px]
+                          w-[26px]
                           shrink-0
                           items-center
                           justify-center
-                          rounded-lg
+                          rounded-md
+
                           ${
                             isActive
                               ? 'bg-white border border-blue-100'
@@ -369,7 +432,7 @@ export default function MainLayout() {
                         `}
                       >
                         <Icon
-                          size={17}
+                          size={14}
                           strokeWidth={
                             isActive ? 2 : 1.8
                           }
@@ -381,11 +444,15 @@ export default function MainLayout() {
                         />
                       </div>
 
+                      {/* Label */}
+
                       {!sidebarCollapsed && (
                         <span
                           className={`
                             truncate
-                            text-xs
+                            text-[11px]
+                            leading-none
+
                             ${
                               isActive
                                 ? 'font-semibold'
@@ -396,6 +463,7 @@ export default function MainLayout() {
                           {item.label}
                         </span>
                       )}
+
                     </>
                   )}
                 </NavLink>
@@ -415,19 +483,22 @@ export default function MainLayout() {
             border-t
             border-slate-200
             bg-slate-50/70
-            p-3
+            px-2.5
+            py-2
           "
         >
+
           {!sidebarCollapsed ? (
+
             <div className="flex items-center justify-between gap-2">
 
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
 
                 <div
                   className="
                     flex
-                    h-8
-                    w-8
+                    h-7
+                    w-7
                     shrink-0
                     items-center
                     justify-center
@@ -438,7 +509,7 @@ export default function MainLayout() {
                   "
                 >
                   <UserCheck
-                    size={15}
+                    size={14}
                     className="text-blue-600"
                   />
                 </div>
@@ -448,9 +519,10 @@ export default function MainLayout() {
                   <p
                     className="
                       truncate
-                      text-[11px]
+                      text-[10px]
                       font-semibold
                       text-slate-800
+                      leading-none
                     "
                   >
                     {officer?.name || 'Officer'}
@@ -458,17 +530,19 @@ export default function MainLayout() {
 
                   <p
                     className="
-                      mt-0.5
+                      mt-1
                       truncate
-                      text-[9px]
+                      text-[8px]
                       font-mono
                       text-slate-400
+                      leading-none
                     "
                   >
                     {officer?.badgeNumber || 'Session active'}
                   </p>
 
                 </div>
+
               </div>
 
               <button
@@ -477,7 +551,7 @@ export default function MainLayout() {
                 title="Logout Session"
                 aria-label="Logout Session"
                 className="
-                  rounded-lg
+                  rounded-md
                   p-1.5
                   text-slate-400
                   hover:bg-red-50
@@ -485,10 +559,11 @@ export default function MainLayout() {
                   transition
                 "
               >
-                <LogOut size={15} />
+                <LogOut size={14} />
               </button>
 
             </div>
+
           ) : (
 
             <button
@@ -500,18 +575,19 @@ export default function MainLayout() {
                 flex
                 w-full
                 justify-center
-                rounded-lg
-                p-2
+                rounded-md
+                p-1.5
                 text-slate-400
                 hover:bg-red-50
                 hover:text-red-600
                 transition
               "
             >
-              <LogOut size={16} />
+              <LogOut size={15} />
             </button>
 
           )}
+
         </div>
 
       </aside>
